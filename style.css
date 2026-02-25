@@ -2,7 +2,7 @@
 html, body {
   margin: 0;
   padding: 0;
-  background: white;
+  background: #121212;  
   overflow: hidden;
 }
 
@@ -13,18 +13,18 @@ canvas {
 
 /* Minimal Exhibition Input Styling */
 input {
-  font-family: "parabolica", sans-serif;
+  font-family: "aktiv-grotesk", sans-serif;
   font-weight: 700;
   font-size: 18px;
   letter-spacing: 1px;
 
   background: transparent;
   border: none;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid white;   /* ← white underline */
 
   padding: 4px 0;
   outline: none;
-  color: black;
+  color: white;    /* ← text white */
 }
 
 /* Optional subtle UI positioning */
