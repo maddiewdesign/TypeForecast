@@ -1,35 +1,150 @@
-/* Reset */
+/* =========================
+   RESET
+========================= */
 html, body {
   margin: 0;
   padding: 0;
-  background: #121212;  
+  background: #0a0a0a;
   overflow: hidden;
 }
 
-/* Canvas */
+/* =========================
+   CANVAS
+========================= */
 canvas {
   display: block;
 }
 
-/* Minimal Exhibition Input Styling */
+/* =========================
+   UI SYSTEM
+========================= */
+.ui {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  color: #dcdcdc;
+
+  font-family: "ibm-plex-mono", monospace;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+/* =========================
+   DATA (TOP LEFT)
+========================= */
+.data {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  line-height: 1.6;
+}
+
+.data div {
+  display: flex;
+  justify-content: space-between;
+  width: 180px;
+}
+
+.data span {
+  text-align: right;
+  opacity: 0.85;
+}
+
+.spacer {
+  height: 16px;
+}
+
+/* =========================
+   COMMAND INPUT
+========================= */
+.command {
+  position: absolute;
+  bottom: 80px;
+  left: 40px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  pointer-events: auto; /* allows typing */
+}
+
+.command span {
+  opacity: 0.6;
+}
+
+/* INPUT FIELD */
 input {
-  font-family: "aktiv-grotesk", sans-serif;
-  font-weight: 700;
-  font-size: 18px;
+  font-family: "ibm-plex-mono", monospace;
+  font-size: 14px;
   letter-spacing: 1px;
 
   background: transparent;
   border: none;
-  border-bottom: 1px solid white;   /* ← white underline */
+  border-bottom: 1px solid #888;
 
-  padding: 4px 0;
+  padding: 6px 0;
   outline: none;
-  color: white;    /* ← text white */
+  color: #ffffff;
+
+  width: 260px;
 }
 
-/* Optional subtle UI positioning */
-input {
-  position: fixed;
-  top: 40px;
+/* =========================
+   DIVIDER
+========================= */
+.divider {
+  position: absolute;
+  bottom: 140px;
   left: 40px;
+  right: 40px;
+
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+}
+
+/* =========================
+   FOOTER
+========================= */
+.footer {
+  position: absolute;
+  bottom: 40px;
+  left: 40px;
+  right: 40px;
+
+  display: flex;
+  justify-content: space-between;
+
+  font-size: 11px;
+  opacity: 0.5;
+}
+
+/* =========================
+   MOBILE IMPROVEMENTS
+========================= */
+@media (max-width: 768px) {
+
+  .data {
+    top: 20px;
+    left: 20px;
+  }
+
+  .command {
+    left: 20px;
+    bottom: 60px;
+  }
+
+  .divider {
+    left: 20px;
+    right: 20px;
+  }
+
+  .footer {
+    left: 20px;
+    right: 20px;
+  }
+
+  input {
+    width: 200px;
+  }
 }
