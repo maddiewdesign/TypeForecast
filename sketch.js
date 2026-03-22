@@ -44,6 +44,7 @@ function setup() {
     updateDate();
     setInterval(fetchWeather, 300000);
     fontReady = true;
+    fetchCity("London");
   });
 }
 
@@ -86,6 +87,7 @@ function generateTextMask() {
   txtImg.textSize(size);
 
   txtImg.text(currentCity, width * 0.52, height * 0.55);
+  
 }
 
 
