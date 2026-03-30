@@ -1,5 +1,6 @@
-
+/* =========================
    RESET
+========================= */
 html, body {
   margin: 0;
   padding: 0;
@@ -8,44 +9,62 @@ html, body {
 }
 
 /* =========================
-   CANVAS
+   CANVAS (BACKGROUND)
 ========================= */
 canvas {
-  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0;
 }
 
 /* =========================
-   UI SYSTEM
+   GRID SYSTEM (FIXED)
 ========================= */
-.ui {
+.grid {
   position: fixed;
   inset: 0;
-  pointer-events: none;
-  color: #dcdcdc;
+  z-index: 2;
+
+  display: grid;
+
+  /* COLUMNS (UNCHANGED) */
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: 24px;
+
+  
+  grid-template-rows:
+    auto      /* top (data + sandbox) */
+    1fr       /* flexible space */
+    auto      /* TYPE ZONE */
+    1fr       /* flexible space */
+    auto;     /* bottom UI */
+
+  padding: 40px;
 
   font-family: "ibm-plex-mono", monospace;
   font-size: 13px;
   letter-spacing: 0.5px;
+  color: #dcdcdc;
+
+  pointer-events: none;
 }
 
 /* =========================
    DATA (TOP LEFT)
 ========================= */
 .data {
-  position: absolute;
-  top: 40px;
-  left: 40px;
+  grid-column: 1 / span 3;
+  grid-row: 1;
   line-height: 1.6;
 }
 
 .data div {
   display: flex;
   justify-content: space-between;
-  width: 180px;
 }
 
 .data span {
-  text-align: right;
   opacity: 0.85;
 }
 
@@ -54,117 +73,27 @@ canvas {
 }
 
 /* =========================
-   COMMAND INPUT
-========================= */
-.command {
-  position: absolute;
-  bottom: 80px;
-  left: 40px;
-
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  pointer-events: auto; /* allows typing */
-}
-
-.command span {
-  opacity: 0.6;
-}
-
-/* INPUT FIELD */
-input {
-  font-family: "ibm-plex-mono", monospace;
-  font-size: 14px;
-  letter-spacing: 1px;
-
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid #888;
-
-  padding: 6px 0;
-  outline: none;
-  color: #ffffff;
-
-  width: 260px;
-}
-
-/* =========================
-   DIVIDER
-========================= */
-.divider {
-  position: absolute;
-  bottom: 140px;
-  left: 40px;
-  right: 40px;
-
-  height: 1px;
-  background: rgba(255,255,255,0.08);
-}
-
-/* =========================
-   FOOTER
-========================= */
-.footer {
-  position: absolute;
-  bottom: 40px;
-  left: 40px;
-  right: 40px;
-
-  display: flex;
-  justify-content: space-between;
-
-  font-size: 11px;
-  opacity: 0.5;
-}
-
-/* =========================
-   MOBILE IMPROVEMENTS
-========================= */
-@media (max-width: 768px) {
-
-  .data {
-    top: 20px;
-    left: 20px;
-  }
-
-  .command {
-    left: 20px;
-    bottom: 60px;
-  }
-
-  .divider {
-    left: 20px;
-    right: 20px;
-  }
-
-  .footer {
-    left: 20px;
-    right: 20px;
-  }
-
-  input {
-    width: 200px;
-  }
-}
-
-/* =========================
-   SANDBOX PANEL
+   SANDBOX (TOP RIGHT)
 ========================= */
 .sandbox {
-  position: absolute;
-  top: 40px;
-  right: 40px;
-
-  width: 260px;
-
-  font-family: "ibm-plex-mono", monospace;
+  grid-column: 10 / span 3;
+  grid-row: 1;
+  pointer-events: auto;
   font-size: 12px;
-  color: #dcdcdc;
 }
 
+/* =========================
+   TYPE ROW (ANCHOR ONLY)
+========================= */
+.type-row {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  pointer-events: none;
+}
 
-/* HEADER */
+/* =========================
+   SANDBOX HEADER
+========================= */
 .sandbox-header {
   display: flex;
   justify-content: space-between;
@@ -172,17 +101,27 @@ input {
   margin-bottom: 20px;
 }
 
+/* BUTTON */
 #toggleSandbox {
   background: none;
   border: 1px solid rgba(255,255,255,0.3);
   color: #dcdcdc;
-  font-family: "ibm-plex-mono", monospace;
+  font-family: inherit;
   font-size: 11px;
   padding: 2px 8px;
   cursor: pointer;
+  transition: all 0.15s ease;
 }
 
-/* CONTROL ROW */
+#toggleSandbox.active {
+  background: #ffffff;
+  color: #000000;
+  border: 1px solid #ffffff;
+}
+
+/* =========================
+   SANDBOX CONTROLS
+========================= */
 .control {
   margin-bottom: 18px;
 }
@@ -221,23 +160,88 @@ input {
 }
 
 /* =========================
-   SANDBOX BUTTON
+   COMMAND (BOTTOM LEFT)
 ========================= */
-#toggleSandbox {
-  background: none;
-  border: 1px solid rgba(255,255,255,0.3);
-  color: #dcdcdc;
-  font-family: "ibm-plex-mono", monospace;
-  font-size: 11px;
-  padding: 2px 8px;
-  cursor: pointer;
+.command {
+  grid-column: 1 / span 4;
+  grid-row: 5;
 
-  transition: all 0.15s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  pointer-events: auto;
 }
 
-/* ACTIVE STATE */
-#toggleSandbox.active {
-  background: #ffffff;
-  color: #000000;
-  border: 1px solid #ffffff;
+.command span {
+  opacity: 0.6;
+}
+
+/* INPUT */
+input {
+  font-family: inherit;
+  font-size: 14px;
+  letter-spacing: 1px;
+
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #888;
+
+  padding: 6px 0;
+  outline: none;
+  color: #ffffff;
+
+  width: 100%;
+}
+
+/* =========================
+   DIVIDER
+========================= */
+.divider {
+  grid-column: 1 / -1;
+  grid-row: 5;
+
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+
+  margin-top: 40px; /* keeps spacing consistent */
+}
+
+/* =========================
+   FOOTER
+========================= */
+.footer {
+  grid-column: 1 / -1;
+  grid-row: 5;
+
+  margin-top: 80px; /* preserves your original spacing */
+
+  display: flex;
+  justify-content: space-between;
+
+  font-size: 11px;
+  opacity: 0.5;
+}
+
+/* =========================
+   MOBILE (SAFE)
+========================= */
+@media (max-width: 768px) {
+
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+    padding: 20px;
+  }
+
+  .data {
+    grid-column: 1 / span 2;
+  }
+
+  .sandbox {
+    grid-column: 3 / span 2;
+  }
+
+  .command {
+    grid-column: 1 / span 4;
+  }
 }

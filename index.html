@@ -14,8 +14,9 @@
 
 <body>
 
-  <div class="ui">
+  <div class="grid">
 
+    <!-- DATA -->
     <div class="data">
       <div>DATE<span id="date">--</span></div>
       <div>LOCATION<span id="location">LONDON</span></div>
@@ -28,13 +29,51 @@
       <div>TEMP<span id="temp">--</span></div>
     </div>
 
+    <!-- SANDBOX -->
+    <div class="sandbox">
+      <div class="sandbox-header">
+        <span>SANDBOX</span>
+        <button id="toggleSandbox">OFF</button>
+      </div>
+
+      <div class="control" data-type="precip">
+        <span>PRECIP</span>
+        <span class="value">00</span>
+        <div class="track"><div class="handle"></div></div>
+      </div>
+
+      <div class="control" data-type="wind">
+        <span>WIND SPD</span>
+        <span class="value">00</span>
+        <div class="track"><div class="handle"></div></div>
+      </div>
+
+      <div class="control" data-type="dir">
+        <span>WIND DIR</span>
+        <span class="value">00</span>
+        <div class="track"><div class="handle"></div></div>
+      </div>
+
+      <div class="control" data-type="temp">
+        <span>TEMP</span>
+        <span class="value">00</span>
+        <div class="track"><div class="handle"></div></div>
+      </div>
+    </div>
+
+    <!-- TYPE ROW MARKER (invisible but structural) -->
+    <div class="type-row"></div>
+
+    <!-- COMMAND -->
     <div class="command">
       <span>&gt; TYPE LOCATION</span>
       <input id="cityInput" type="text" autocomplete="off"/>
     </div>
 
+    <!-- DIVIDER -->
     <div class="divider"></div>
 
+    <!-- FOOTER -->
     <div class="footer">
       <div>UPDATE...5 MIN INTERVALS</div>
       <div>DATA...OPEN-METEO</div>
@@ -50,52 +89,15 @@
     input.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
         const value = input.value.trim();
-
-        if (value !== "") {
-          if (window.fetchCity) {
-            window.fetchCity(value);
-          }
+        if (value !== "" && window.fetchCity) {
+          window.fetchCity(value);
           input.value = "";
         }
       }
     });
 
-    // auto focus 
     window.onload = () => input.focus();
   </script>
 
 </body>
 </html>
-
-<div class="sandbox">
-
-  <div class="sandbox-header">
-    <span>SANDBOX</span>
-    <button id="toggleSandbox">OFF</button>
-  </div>
-
-  <div class="control" data-type="precip">
-    <span>PRECIP</span>
-    <span class="value">00</span>
-    <div class="track"><div class="handle"></div></div>
-  </div>
-
-  <div class="control" data-type="wind">
-    <span>WIND SPD</span>
-    <span class="value">00</span>
-    <div class="track"><div class="handle"></div></div>
-  </div>
-
-  <div class="control" data-type="dir">
-    <span>WIND DIR</span>
-    <span class="value">00</span>
-    <div class="track"><div class="handle"></div></div>
-  </div>
-
-  <div class="control" data-type="temp">
-    <span>TEMP</span>
-    <span class="value">00</span>
-    <div class="track"><div class="handle"></div></div>
-  </div>
-
-</div>
