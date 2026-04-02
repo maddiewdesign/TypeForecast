@@ -418,7 +418,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       if (type === "temp") {
-        sandboxValues.temperature = Math.round(-25 + percent * 60);
+        sandboxValues.temperature = Math.round(-25 + percent * 80);
         valueText.textContent = sandboxValues.temperature;
       }
 
