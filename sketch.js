@@ -104,7 +104,7 @@ function setup() {
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
-  updateTypePosition();   // NEW
+  updateTypePosition();  
   generateTextMask();
 }
 
@@ -134,7 +134,6 @@ function generateTextMask() {
   let size = getFittingTextSize(currentCity);
   txtImg.textSize(size);
 
-  // 🔥 THIS IS THE FIX
   txtImg.text(currentCity, width / 2, typeY);
 }
 
@@ -442,3 +441,4 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 window.devGenerateFromInput = devGenerateFromInput;
+
