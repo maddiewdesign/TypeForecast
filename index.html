@@ -29,6 +29,11 @@
       <div>TEMP<span id="temp">--</span></div>
     </div>
 
+    <!-- HELP TRIGGER -->
+    <div class="help-trigger">
+      <button id="helpButton" aria-label="Open usage help">?</button>
+    </div>
+
     <!-- SANDBOX -->
     <div class="sandbox">
       <div class="sandbox-header">
@@ -86,6 +91,28 @@
 
   </div>
 
+  <div class="help-overlay" id="helpOverlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="help-backdrop"></div>
+    <div class="help-panel">
+      <button class="help-close" id="helpClose" aria-label="Close help">×</button>
+
+      <div class="help-card help-card--data">
+        <div class="help-card__title">Live weather data</div>
+        <div class="help-card__text">This section shows the current date, location, precipitation, wind speed, wind direction, and temperature from the weather feed.</div>
+      </div>
+
+      <div class="help-card help-card--sandbox">
+        <div class="help-card__title">Sandbox controls</div>
+        <div class="help-card__text">Use the OFF button to enter sandbox mode, then drag the sliders to preview different weather conditions manually.</div>
+      </div>
+
+      <div class="help-card help-card--command">
+        <div class="help-card__title">Type a location</div>
+        <div class="help-card__text">Enter a city and press Enter to load live weather data for that place. The card updates automatically after fetch.</div>
+      </div>
+    </div>
+  </div>
+
   <script src="sketch.js"></script>
 
   <script>
@@ -114,6 +141,27 @@
     });
 
     window.onload = () => input.focus();
+
+    const helpButton = document.getElementById("helpButton");
+    const helpOverlay = document.getElementById("helpOverlay");
+    const helpBackdrop = helpOverlay.querySelector(".help-backdrop");
+    const helpClose = document.getElementById("helpClose");
+
+    function toggleHelp(show) {
+      helpOverlay.classList.toggle("visible", show);
+      helpOverlay.setAttribute("aria-hidden", show ? "false" : "true");
+    }
+
+    if (helpButton && helpOverlay && helpClose && helpBackdrop) {
+      helpButton.addEventListener("click", () => toggleHelp(true));
+      helpClose.addEventListener("click", () => toggleHelp(false));
+      helpBackdrop.addEventListener("click", () => toggleHelp(false));
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && helpOverlay.classList.contains("visible")) {
+          toggleHelp(false);
+        }
+      });
+    }
   </script>
 
 </body>
