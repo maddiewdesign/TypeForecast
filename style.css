@@ -94,6 +94,12 @@ canvas {
   font-size: 11px;
   padding: 2px 8px;
   cursor: pointer;
+  transition: all 0.2s;
+}
+
+#toggleSandbox:hover {
+  border: 1px solid #fff;
+  color: #fff;
 }
 
 #toggleSandbox.active {
@@ -144,9 +150,11 @@ canvas {
 ========================= */
 .divider {
   grid-column: 1 / -1;
-  grid-row: 5;
+  grid-row: 4;
+  align-self: end;
   height: 1px;
   background: rgba(255,255,255,0.08);
+  margin-bottom: 12px;
 }
 
 /* =========================
@@ -170,6 +178,12 @@ input {
   color: #fff;
   font-family: inherit;
   font-size: 14px;
+  outline: none;
+  caret-color: #fff;
+}
+
+input:focus {
+  outline: none;
 }
 
 /* =========================
@@ -229,6 +243,8 @@ input {
   position: relative;
   width: 100%;
   height: 1px;
+  stroke-width: 0;
+  stroke-opacity: 0;
   background: rgba(255,255,255,0.3);
 }
 
@@ -236,8 +252,11 @@ input {
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 6px;
-  height: 8px;
-  background: #ffffff;
+  width: 10px;
+  height: 16px;
+  background: #0a0a0a;
+  border: none;
+  box-shadow: 0 0 0 1px #dcdcdc;
+  box-sizing: border-box;
   left: 0%;
 }

@@ -10,114 +10,205 @@
 
 <body>
 
-<div class="split">
+<div class="container">
 
-  <!-- LEFT -->
-  <div class="left">
-
-    <div class="title">
-      H0W IT W0RKS
-      <span>&lt;C0RE C0DE&gt;</span>
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-top">
+      <h1>HOW IT WORKS</h1>
+      <a href="index.html" class="back-btn">&lt; BACK</a>
     </div>
+    <p class="subtitle">&lt;CORE CODE&gt;</p>
+  </div>
 
-    <p class="body-text">
-// DATA FETCHING
+  <!-- SECTION 1 -->
+  <section class="section">
+    <div class="section-content">
+      <div class="left-col">
+        <h2>1. Weather Data (Fetching live information)</h2>
+        <p>The first part connects to a weather API and pulls in real-time data such as:</p>
+        <ul>
+          <li>wind speed and direction</li>
+          <li>temperature</li>
+          <li>chance of precipitation</li>
+        </ul>
+        <p>This data is updated every time the function runs. If the system is in "sandbox mode," it ignores live data and uses preset values instead. Once the data is received, the interface is updated to reflect the new weather conditions.</p>
+      </div>
+      <div class="right-col">
+        <pre><code>//Data fetching:
 
 function fetchWeather() {
 
-    let url = `open-meteo API`;
+  let url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}
+&hourly=precipitation_probability&current_weather=true&windspeed_unit=mph`;
 
-    fetch(url)
-        .then(r => r.json())
-        .then(data => {
+  fetch(url)
+    .then(r => r.json())
+    .then(data => {
 
-            windSpeed = data.current_weather.windspeed;
-            windDirection = data.current_weather.winddirection;
-            temperature = data.current_weather.temperature;
+      if (!window.sandboxActive && data.current_weather) {
+        windSpeed = data.current_weather.windspeed || 0;
+        windDirection = data.current_weather.winddirection || 0;
+        temperature = data.current_weather.temperature || 0;
+      }
 
-            precipitation = data.hourly.precipitation_probability[0];
-        });
-}
+      if (!window.sandboxActive && data.hourly) {
+        precipitation = data.hourly.precipitation_probability[0] || 0;
+      }
 
+      updateUI();
+    });
+}</code></pre>
+      </div>
+    </div>
+  </section>
 
-// RAIN SYSTEM
+  <!-- SECTION 2 -->
+  <section class="section">
+    <div class="section-content">
+      <div class="left-col">
+        <h2>2. Rain System</h2>
+        <p>The rain effect is created by scanning across the screen in a grid.</p>
+        <p>At each point:</p>
+        <ul>
+          <li>a noise pattern decides whether "rain" should appear there</li>
+          <li>a density setting controls how heavy or sparse the rain is</li>
+          <li>only areas that overlap with the text image are drawn</li>
+        </ul>
+        <p>When rain appears, it is shown as small circles. The size of each circle depends on how strong the rainfall is in that location, and the colour comes from the temperature.</p>
+        <p>In short: rain is simulated as animated dots that appear more or less densely depending on weather data and noise patterns.</p>
+      </div>
+      <div class="right-col">
+        <pre><code>//Rain
 
-let rain = noise(x * 0.01, y * 0.01, t);
-let intensity = map(rain, threshold, 1, 0, 1);
+noStroke();
 
-ellipse(x, y, d, d);
+for (let y = 0; y < height; y += cell) {
+  for (let x = 0; x < width; x += cell) {
 
-This system translates live weather data
-into visual behaviour.
+    let rain = noise(x * 0.01, y * 0.01, t);
+    let threshold = map(density, 0, 1, 0.7, 0.25);
 
-Noise introduces variation, allowing the
-output to feel organic rather than mechanical.
-    </p>
+    let intensity = constrain(map(rain, threshold, 1, 0, 1), 0, 1);
+    let d = intensity * cell * 0.9;
 
-  </div>
+    if (d > 0 && txtImg.get(x, y)[0] > 128) {
+      fill(getTempColor(x, y));
+      ellipse(x + cell/2, y + cell/2, d, d);
+    }
+  }
+}</code></pre>
+      </div>
+    </div>
+  </section>
 
-  <!-- RIGHT SIDE -->
-  <div class="right">
+  <!-- SECTION 3 -->
+  <section class="section">
+    <div class="section-content">
+      <div class="left-col">
+        <h2>3. Wind System</h2>
+        <p>The wind is visualised using angled line segments spread across the screen.</p>
+        <p>For each line:</p>
+        <ul>
+          <li>noise creates variation, making wind more realistic</li>
+          <li>thickness changes depending on gust strength</li>
+          <li>only certain areas are drawn based on a density threshold</li>
+          <li>lines only appear where the text image allows it</li>
+        </ul>
+        <p>Each line follows a direction influenced by wind data, creating the impression of flowing air moving through the composition.</p>
+        <p>Summary: wind becomes moving strokes that vary in strength, direction, and density.</p>
+      </div>
+      <div class="right-col">
+        <pre><code>//Wind:
 
-    <p class="code">
+for (let i = -height; i < width + height; i += 18) {
 
-<mark>// Wind:</mark><br><br>
+  let gust = noise(i * 0.01 + t);
+  strokeWeight(0.6 + pow(gust, 2) * maxThickness);
 
-<mark>for (let i = -height; i < width + height; i += 18) {</mark><br>
-<mark>&nbsp;&nbsp;let gust = noise(i * 0.01 + t);</mark><br>
-<mark>&nbsp;&nbsp;strokeWeight(0.6 + pow(gust, 2) * maxThickness);</mark><br><br>
+  for (let j = -width; j < width * 2; j += 14) {
 
-<mark>&nbsp;&nbsp;for (let j = -width; j < width * 2; j += 14) {</mark><br><br>
+    if (noise(j * 0.02 + t * 1.8, i * 0.01) > densityField) {
 
-<mark>&nbsp;&nbsp;&nbsp;&nbsp;if (noise(j * 0.02 + t * 1.8, i * 0.01) > densityField) {</mark><br><br>
+      let x1 = width/2 + px*i + dx*j;
+      let y1 = height/2 + py*i + dy*j;
 
-<mark>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let x1 = width/2 + px*i + dx*j;</mark><br>
-<mark>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let y1 = height/2 + py*i + dy*j;</mark><br><br>
+      if (txtImg.get(x1, y1)[0] > 128) {
+        stroke(getTempColor(x1, y1));
+        line(x1, y1, x1 + dx*14, y1 + dy*14);
+      }
+    }
+  }
+}</code></pre>
+      </div>
+    </div>
+  </section>
 
-<mark>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (txtImg.get(x1, y1)[0] > 128) {</mark><br>
-<mark>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stroke(getTempColor(x1, y1));</mark><br>
-<mark>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;line(x1, y1, x1 + dx*14, y1 + dy*14);</mark><br>
-<mark>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</mark><br>
+  <!-- SECTION 4 -->
+  <section class="section">
+    <div class="section-content">
+      <div class="left-col">
+        <h2>4. Colour System</h2>
+        <p>Colour is controlled by temperature.</p>
+        <p>Here's how it works:</p>
+        <ul>
+          <li>the current temperature is matched to a colour range (cold → warm spectrum)</li>
+          <li>the system blends between two nearest colours for smooth transitions</li>
+          <li>final colour is adjusted slightly using noise so it shifts gently across the image</li>
+        </ul>
+        <p>Summary: temperature directly determines the colour mood of the entire visual system.</p>
+      </div>
+      <div class="right-col">
+        <pre><code>//Colour:
 
-<mark>&nbsp;&nbsp;&nbsp;&nbsp;}</mark><br>
-<mark>&nbsp;&nbsp;}</mark><br>
-<mark>}</mark><br><br>
+function getTempColor(x, y) {
 
+  let temp = window.sandboxActive
+    ? sandboxValues.temperature
+    : temperature;
+  temp = constrain(temp, -15, 45);
 
-<mark>// Colour:</mark><br><br>
+  let lower = colors[0];
+  let upper = colors[colors.length - 1];
 
-<mark>function getTempColor(x, y) {</mark><br>
+  for (let i = 0; i < colors.length - 1; i++) {
+    if (temp >= colors[i].t && temp <= colors[i + 1].t) {
+      lower = colors[i];
+      upper = colors[i + 1];
+      break;
+    }
+  }
 
-<mark>&nbsp;&nbsp;let temp = window.sandboxActive</mark><br>
-<mark>&nbsp;&nbsp;&nbsp;&nbsp;? sandboxValues.temperature</mark><br>
-<mark>&nbsp;&nbsp;&nbsp;&nbsp;: temperature;</mark><br><br>
+  let amt = (temp - lower.t) / (upper.t - lower.t);
+  let base = lerpColor(lower.c, upper.c, amt * (0.7 + 0.3 * n));
 
-<mark>&nbsp;&nbsp;temp = constrain(temp, -15, 45);</mark><br><br>
+  colorMode(HSB, 360, 100, 100);
 
-<mark>&nbsp;&nbsp;let lower = colors[0];</mark><br>
-<mark>&nbsp;&nbsp;let upper = colors[colors.length - 1];</mark><br><br>
+  let h = (hue(base) + map(noise(x*0.01,y*0.01,t),0,1,-20,20)) % 360;
+  let s = saturation(base);
+  let b = brightness(base);
+  let final = color(h, s, b);
 
-<mark>&nbsp;&nbsp;for (let i = 0; i < colors.length - 1; i++) {</mark><br>
-<mark>&nbsp;&nbsp;&nbsp;&nbsp;if (temp >= colors[i].t && temp <= colors[i + 1].t) {</mark><br>
-<mark>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lower = colors[i];</mark><br>
-<mark>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;upper = colors[i + 1];</mark><br>
-<mark>&nbsp;&nbsp;&nbsp;&nbsp;}</mark><br>
-<mark>&nbsp;&nbsp;}</mark><br><br>
+  colorMode(RGB, 255);
+  return final;
+}</code></pre>
+      </div>
+    </div>
+  </section>
 
-<mark>&nbsp;&nbsp;let amt = (temp - lower.t) / (upper.t - lower.t);</mark><br>
-<mark>&nbsp;&nbsp;let base = lerpColor(lower.c, upper.c, amt);</mark><br><br>
-
-<mark>&nbsp;&nbsp;let h = hue(base) + noise(x, y, t);</mark><br>
-<mark>&nbsp;&nbsp;let s = saturation(base);</mark><br>
-<mark>&nbsp;&nbsp;let b = brightness(base);</mark><br><br>
-
-<mark>&nbsp;&nbsp;return color(h, s, b);</mark><br>
-
-<mark>}</mark>
-
-    </p>
-
-  </div>
+  <!-- OVERALL SECTION -->
+  <section class="section overall">
+    <div class="left-col">
+      <h2>Summary</h2>
+      <p>Instead of drawing static graphics, the code turns weather data into a living system:</p>
+      <ul>
+        <li>rain = probability + noise</li>
+        <li>wind = direction + flow + variation</li>
+        <li>colour = temperature gradient</li>
+      </ul>
+      <p>The result is a visual language where weather becomes the generator of form</p>
+    </div>
+  </section>
 
 </div>
 

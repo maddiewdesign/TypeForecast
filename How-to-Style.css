@@ -1,74 +1,220 @@
-body {
+/* =========================
+   RESET
+========================= */
+* {
   margin: 0;
   padding: 0;
-  font-family: "ibm-plex-mono", monospace;
+  box-sizing: border-box;
 }
 
 html, body {
   margin: 0;
   padding: 0;
-  overflow: auto;
-  background: #000;
-}
-
-/* GRID */
-.split {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  height: 100vh;
-}
-
-/* COLUMNS */
-.left,
-.right {
-  padding: 60px;
-  display: flex;
-  flex-direction: column;
-}
-
-/* LEFT */
-.left {
   background: #0a0a0a;
+  color: #fff;
+  font-family: "ibm-plex-mono", monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  letter-spacing: 0.3px;
+}
+
+/* =========================
+   CONTAINER
+========================= */
+.container {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: 24px;
+  max-width: 100%;
+  padding: 40px;
+}
+
+/* =========================
+   HEADER
+========================= */
+.header {
+  grid-column: 1 / -1;
+  margin-bottom: 80px;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 4px;
+}
+
+.header h1 {
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.header .subtitle {
+  font-size: 11px;
+  opacity: 0.6;
+  letter-spacing: 0.3px;
+}
+
+.back-btn {
+  font-size: 11px;
+  color: #dcdcdc;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 2px 8px;
+  display: inline-block;
+  transition: all 0.2s;
+  white-space: nowrap;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.back-btn:hover {
+  border-color: #fff;
   color: #fff;
 }
 
-.title {
-  font-size: 30px;
-  line-height: 1.1;
-  letter-spacing: 1px;
-  margin-bottom: 40px;
+/* =========================
+   SECTIONS
+========================= */
+.section {
+  grid-column: 1 / -1;
+  margin-bottom: 100px;
+  scroll-margin-top: 100px;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: 24px;
 }
 
-.title span {
-  display: block;
-  font-size: 14px;
+.section-content {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: 24px;
+}
+
+.left-col {
+  grid-column: 1 / span 6;
+}
+
+.right-col {
+  grid-column: 7 / span 6;
+}
+
+.left-col h2 {
+  font-size: 18px;
+  font-weight: 400;
+  margin-bottom: 16px;
+  letter-spacing: 0.5px;
+}
+
+.left-col p {
+  margin-bottom: 12px;
+  opacity: 0.9;
+  line-height: 1.7;
+}
+
+.left-col ul {
+  list-style: none;
+  margin: 12px 0 12px 0;
+  padding-left: 20px;
+}
+
+.left-col li {
+  margin-bottom: 8px;
+  position: relative;
+  padding-left: 10px;
+}
+
+.left-col li:before {
+  content: "•";
+  position: absolute;
+  left: 0;
   opacity: 0.6;
 }
 
-.body-text {
-  max-width: 460px;
+/* =========================
+   CODE BLOCK
+========================= */
+.right-col {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 24px;
+  overflow-x: auto;
+}
+
+.right-col pre {
+  margin: 0;
+  font-family: "ibm-plex-mono", monospace;
   font-size: 11px;
-  line-height: 1.25;
-  white-space: pre;
-  letter-spacing: 0.3px;
+  line-height: 1.6;
+  letter-spacing: 0.2px;
+  color: #dcdcdc;
 }
 
-/* RIGHT */
-.right {
-  background: #f2f2f2;
-  color: #0a0a0a;
+.right-col code {
+  font-family: inherit;
+  color: inherit;
 }
 
-.code {
-  font-size: 11px;
-  line-height: 1.25;
-  letter-spacing: 0.3px;
+/* =========================
+   OVERALL SECTION
+========================= */
+.section.overall {
+  grid-column: 1 / -1;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: none;
+  padding: 40px 0;
+  margin-top: 80px;
 }
 
-/* HIGHLIGHT */
-.code mark {
-  background: #0a0a0a;
-  color: #fff;
-  padding: 1px 3px;
-  display: inline;
+.section.overall .left-col {
+  grid-column: 1 / span 6;
+}
+
+.section.overall h2 {
+  font-size: 24px;
+  margin-bottom: 24px;
+}
+
+.section.overall p {
+  orphans: 3;
+  widows: 3;
+  text-wrap: balance;
+  hyphens: auto;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 1024px) {
+  .left-col {
+    grid-column: 1 / -1;
+  }
+
+  .right-col {
+    grid-column: 1 / -1;
+    padding: 16px;
+    font-size: 10px;
+  }
+
+  .right-col pre {
+    font-size: 9px;
+    line-height: 1.5;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 40px 20px;
+  }
+
+  .header h1 {
+    font-size: 24px;
+  }
+
+  .left-col h2 {
+    font-size: 16px;
+  }
 }
