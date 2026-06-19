@@ -394,8 +394,10 @@ document.addEventListener("DOMContentLoaded", () => {
     let dragging = false;
 
     function update(e) {
+      if (!window.sandboxActive) return;
       const rect = track.getBoundingClientRect();
-      let percent = constrain((e.clientX - rect.left) / rect.width, 0, 1);
+      let clientX = getClientXFromEvent(e);
+      let percent = constrain((clientX - rect.left) / rect.width, 0, 1);
 
       handle.style.left = `${percent * 100}%`;
 
@@ -428,14 +430,38 @@ document.addEventListener("DOMContentLoaded", () => {
       dragging = true;
       update(e);
     });
+    // Pointer events (unified for mouse + touch) ------------------------------------------------
+    function getClientXFromEvent(e) {
+      if (e.touches && e.touches[0]) return e.touches[0].clientX;
+      if (e.changedTouches && e.changedTouches[0]) return e.changedTouches[0].clientX;
+      return e.clientX;
+    }
 
-    window.addEventListener("mousemove", e => {
+    // Replace mouse-only handlers with pointer/touch-friendly handlers.
+    track.addEventListener("pointerdown", e => {
+      if (!window.sandboxActive) return;
+      e.preventDefault();
+      dragging = true;
+      if (track.setPointerCapture) track.setPointerCapture(e.pointerId);
+      update(e);
+    });
+
+    track.addEventListener("pointermove", e => {
       if (dragging) update(e);
     });
 
-    window.addEventListener("mouseup", () => dragging = false);
+    window.addEventListener("pointerup", e => {
+      dragging = false;
+      try { if (e.pointerId && track.releasePointerCapture) track.releasePointerCapture(e.pointerId); } catch (err) {}
+    });
 
-    track.addEventListener("click", update);
+    // Fallback for older touch-only browsers
+    track.addEventListener("touchstart", e => { if (!window.sandboxActive) return; e.preventDefault(); dragging = true; update(e); }, {passive:false});
+    window.addEventListener("touchmove", e => { if (dragging) { e.preventDefault(); update(e); } }, {passive:false});
+    window.addEventListener("touchend", () => dragging = false);
+
+    // Keep click handling for tap-to-set behavior (only when sandbox active)
+    track.addEventListener("click", e => { if (!window.sandboxActive) return; update(e); });
   });
 
 });
